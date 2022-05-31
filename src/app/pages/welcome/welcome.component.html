@@ -1,43 +1,55 @@
-<nz-table #basicTable  [nzData]="listOfData">
-    <thead>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>User Name</th>
-        <th>Enable</th>
-        <th>About</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data; let idx = index">
-        <td>{{data.firstName}}</td>
-        <td>{{data.lastName}}</td>
-        <td>{{data.userName}}</td>
-        <td>{{data.enable}}</td>
-        <td> 
-          <button nz-button nzType="primary" (click)="open(data.id)">About</button>
+<nz-table #basicTable [nzData]="listOfData">
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>User Name</th>
+      <th>Enable</th>
+      <th>About</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data; let idx = index">
+      <td>{{data.firstName}}</td>
+      <td>{{data.lastName}}</td>
+      <td>{{data.userName}}</td>
+      <td>{{data.enable}}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="open(data.id)">About</button>
 
-          <nz-drawer
-      [nzClosable]="false"
-      [nzVisible]="visible"
-      nzPlacement="right"
-      nzTitle="Basic Drawer"
-      (nzOnClose)="close()"
-    >
-      <ng-container *nzDrawerContent>
-        <p>First Name:  {{tempClient?.firstName}}</p>
-        <p>Last Name:  {{tempClient?.lastName}}</p>
-        <p>User Name:  {{tempClient?.userName}}</p>
-        <p>Enable:  {{tempClient?.enable}}</p>
-
-        <textarea rows="4" nz-input [(ngModel)]="message"></textarea> 
-        <button nz-button nzType="primary" (click)="Sned()">Sned</button>
-
-      </ng-container>
-    </nz-drawer>  
-        </td>
+        <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" nzTitle={{tempClient?.firstName}}
+          (nzOnClose)="close()">
+          <ng-container *nzDrawerContent>
+            <p>First Name: {{tempClient?.firstName}}</p>
+            <p>Last Name: {{tempClient?.lastName}}</p>
+            <p>User Name: {{tempClient?.userName}}</p>
+            <p>Enable: <nz-switch [(ngModel)]="switchValue"></nz-switch></p>
 
 
-      </tr>
-    </tbody>
-  </nz-table>
+
+
+            <textarea rows="4" nz-input [(ngModel)]="message"></textarea>
+            <button nz-button nzType="primary" (click)="Sned()">Sned</button>
+
+            <div>
+              <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
+                <nz-avatar nz-comment-avatar nzIcon="user"
+                  nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+                <nz-comment-content>
+                  <p>
+                    We supply a series of design principles, practical patterns and high quality design resources
+                    (Sketch and
+                    Axure), to help people create their product prototypes beautifully and efficiently.
+                  </p>
+                </nz-comment-content>
+            
+            </nz-comment>
+          </div>
+          </ng-container>
+        </nz-drawer>
+      </td>
+
+
+    </tr>
+  </tbody>
+</nz-table>

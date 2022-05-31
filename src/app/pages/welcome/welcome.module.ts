@@ -7,6 +7,9 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { CommonModule } from '@angular/common';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { FormsModule } from '@angular/forms';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+
 
 
 
@@ -16,7 +19,10 @@ import { FormsModule } from '@angular/forms';
     NzTableModule, 
     CommonModule,
     NzDrawerModule,
-    FormsModule ],
+    FormsModule ,
+    NzCommentModule,
+    NzSwitchModule
+],
   declarations: [WelcomeComponent],
   exports: [WelcomeComponent]
 })

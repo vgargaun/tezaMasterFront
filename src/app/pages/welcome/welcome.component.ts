@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { Client } from "../../models/client";
 import { Test } from "../../models/test";
 
+import { formatDistance } from 'date-fns';
+
 
 @Component({
   selector: 'app-welcome',
@@ -17,7 +19,27 @@ export class WelcomeComponent implements OnInit {
   message?: string
   editCache: { [key: string]: { edit: boolean; data: Client } } = {};
 
-  listOfData: Client[] = []
+  // listOfData: Client[] = []
+
+  listOfData: Client[] = [
+    {
+      id : "1",
+      firstName : "Veceslav",
+      lastName : "Gargaun",
+      cheatId : "123456",
+      enable : true,
+      userName : "user"
+    },{
+    id : "2",
+    firstName : "Ion",
+    lastName : "Constiu",
+    cheatId : "12345456",
+    enable : true,
+    userName : "user2"
+    }
+  ]
+
+
   visible = false;
   tempClient ?: Client;
 
@@ -61,13 +83,30 @@ export class WelcomeComponent implements OnInit {
     )
   }
 
+  likes = 0;
+  dislikes = 0;
+  time = formatDistance(new Date(), new Date());
+
+  like(): void {
+    this.likes = 1;
+    this.dislikes = 0;
+  }
+
+  dislike(): void {
+    this.likes = 0;
+    this.dislikes = 1;
+  }
+
+  switchValue = false;
+
+
   ngOnInit() {
-    this.http.get<Client[]>("/api/getClientList")
-    .subscribe(respons=>{
-      this.listOfData = respons
+    // this.http.get<Client[]>("/api/getClientList")
+    // .subscribe(respons=>{
+    //   this.listOfData = respons
      this.updateEditCache();
-      console.log(respons)
-    })
+    //   console.log(respons)
+    // })
 
   }
 
