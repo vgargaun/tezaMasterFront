@@ -8,6 +8,8 @@ export interface Client {
     cheatId:string;
 
     userName:string;
+
+    enable:boolean;
     
 }
 
