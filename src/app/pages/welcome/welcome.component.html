@@ -1,6 +1,12 @@
 <nz-table #basicTable [nzData]="listOfData">
   <thead>
     <tr>
+      <th
+      [nzSelections]="listOfSelection"
+      [(nzChecked)]="checked"
+      [nzIndeterminate]="indeterminate"
+      (nzCheckedChange)="onAllChecked($event)"
+    ></th>
       <th>First Name</th>
       <th>Last Name</th>
       <th>User Name</th>
@@ -10,6 +16,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data; let idx = index">
+      <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
       <td>{{data.firstName}}</td>
       <td>{{data.lastName}}</td>
       <td>{{data.userName}}</td>
@@ -23,46 +30,84 @@
             <p style="font-style: italic;">First Name: {{tempClient?.firstName}}</p>
             <p style="font-style: italic;">Last Name: {{tempClient?.lastName}}</p>
             <p style="font-style: italic;">User Name: {{tempClient?.userName}}</p>
-            <p style="font-style: italic;">Enable: <nz-switch [(ngModel)]="switchValue"></nz-switch></p>
-            <p><button nz-button (click)="showModal()"><span>Add remeber</span></button>
-              <nz-modal [(nzVisible)]="isVisible" nzTitle={{programare}} (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+            <p style="font-style: italic;">Enable: <nz-switch [(ngModel)]="switchValue"></nz-switch>
+            </p>
+            <div><button nz-button (click)="showModal()"><span>Add reminder</span></button>
+              <div style="padding-top: 25px; padding-bottom: 25px">
+                <nz-collapse>
+                  <nz-collapse-panel
+                    *ngFor="let panel of panels"
+                    [nzHeader]="panel.name"
+                    [nzActive]="panel.active"
+                    [nzDisabled]="panel.disabled"
+                  >
+                    <p style="margin:0;">
+                      {{panel.message}}
+                    </p>
+                  </nz-collapse-panel>
+                </nz-collapse>
+              </div>
+              <nz-modal [(nzVisible)]="isVisible" nzTitle={{programare}} (nzOnCancel)="handleCancel()"
+                (nzOnOk)="handleOk()">
                 <ng-container *nzModalContent>
-                  <p>Content one</p>
-                  <p>Content two</p>
-                  <p>Content three</p>
+                  <div style="width: 23em; padding-bottom: 25px"> <input nz-input placeholder="Reminder title" [(ngModel)]="value" />
+                    <br />
+                  </div>
+                  <div [ngStyle]="{width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+                    <nz-calendar [nzFullscreen]="false" (nzSelectChange)="onValueChange($event)"
+                      (nzPanelChange)="onPanelChange($event)"></nz-calendar>
+                  </div>
+                  <div style="padding-top: 25px;">
+                    <nz-time-picker [(ngModel)]="time" [nzDefaultOpenValue]="defaultOpenValue"></nz-time-picker>
+                  </div>
+                  <p style="padding-top: 25px;">Message:</p>
+                  <textarea rows="4" nz-input [(ngModel)]="message"></textarea>
+
                 </ng-container>
-              </nz-modal></p>
+              </nz-modal>
+            </div>
 
 
+            <div class="clearfix">
+              <nz-upload
+                nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                nzListType="picture-card"
+                [(nzFileList)]="fileList"
+                [nzShowButton]="fileList.length < 8"
+                [nzPreview]="handlePreview"
+              >
+                <div>
+                  <i nz-icon nzType="plus"></i>
+                  <div style="margin-top: 8px">Upload</div>
+                </div>
+              </nz-upload>
+              <nz-modal
+                [nzVisible]="previewVisible"
+                [nzContent]="modalContent"
+                [nzFooter]="null"
+                (nzOnCancel)="previewVisible = false"
+              >
+                <ng-template #modalContent>
+                  <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+                </ng-template>
+              </nz-modal>
+            </div>
 
 
 
             <textarea rows="4" nz-input [(ngModel)]="message"></textarea>
-            <button nz-button nzType="primary" (click)="Sned()">Sned</button>
+            <button nz-button nzType="primary" (click)="Sned()">Send</button>
 
             <div>
-              <div>
-                <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
-                  <nz-avatar nz-comment-avatar nzIcon="user"
-                    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-                  <nz-comment-content>
-                    <p>
-                      Am avut o experienta placuta
-                    </p>
-                  </nz-comment-content>
-                </nz-comment>
-              </div>
-              <div>
-                <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
-                  <nz-avatar nz-comment-avatar nzIcon="user"
-                    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-                  <nz-comment-content>
-                    <p>
-                      Nu mai vin aici nici o data
-                    </p>
-                  </nz-comment-content>
-                </nz-comment>
-              </div>
+              <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
+                <nz-avatar nz-comment-avatar nzIcon="user"
+                  nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+                <nz-comment-content>
+                  <p>
+                    Am avut o experienta placuta
+                  </p>
+                </nz-comment-content>
+              </nz-comment>
             </div>
           </ng-container>
         </nz-drawer>

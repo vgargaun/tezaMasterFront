@@ -10,10 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-
-
-
-
+import { NzCalendarModule } from 'ng-zorro-antd/calendar';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 
 @NgModule({
@@ -24,7 +25,12 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     FormsModule ,
     NzCommentModule,
     NzSwitchModule,
-    NzModalModule 
+    NzModalModule ,
+    NzCalendarModule,
+    NzTimePickerModule,
+    NzInputModule,
+    NzCollapseModule,
+    NzUploadModule
 ],
   declarations: [WelcomeComponent],
   exports: [WelcomeComponent]
