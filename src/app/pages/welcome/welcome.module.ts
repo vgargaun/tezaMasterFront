@@ -9,6 +9,8 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { FormsModule } from '@angular/forms';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+
 
 
 
@@ -21,7 +23,8 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzDrawerModule,
     FormsModule ,
     NzCommentModule,
-    NzSwitchModule
+    NzSwitchModule,
+    NzModalModule 
 ],
   declarations: [WelcomeComponent],
   exports: [WelcomeComponent]

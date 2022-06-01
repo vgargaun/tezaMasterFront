@@ -79,7 +79,8 @@ export class WelcomeComponent implements OnInit {
     this.http.post('/api/sendMessage', test).subscribe(
       respons =>{
         console.log(respons)
-      }
+        this.message = "";
+      } 
     )
   }
 
@@ -100,6 +101,24 @@ export class WelcomeComponent implements OnInit {
   switchValue = false;
 
 
+//modal
+  isVisible = false;
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    console.log('Button ok clicked!');
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
+  }
+
+  programare : string = "Programare la consultatie"
   ngOnInit() {
     // this.http.get<Client[]>("/api/getClientList")
     // .subscribe(respons=>{

@@ -20,10 +20,19 @@
         <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" nzTitle={{tempClient?.firstName}}
           (nzOnClose)="close()">
           <ng-container *nzDrawerContent>
-            <p>First Name: {{tempClient?.firstName}}</p>
-            <p>Last Name: {{tempClient?.lastName}}</p>
-            <p>User Name: {{tempClient?.userName}}</p>
-            <p>Enable: <nz-switch [(ngModel)]="switchValue"></nz-switch></p>
+            <p style="font-style: italic;">First Name: {{tempClient?.firstName}}</p>
+            <p style="font-style: italic;">Last Name: {{tempClient?.lastName}}</p>
+            <p style="font-style: italic;">User Name: {{tempClient?.userName}}</p>
+            <p style="font-style: italic;">Enable: <nz-switch [(ngModel)]="switchValue"></nz-switch></p>
+            <p><button nz-button (click)="showModal()"><span>Add remeber</span></button>
+              <nz-modal [(nzVisible)]="isVisible" nzTitle={{programare}} (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+                <ng-container *nzModalContent>
+                  <p>Content one</p>
+                  <p>Content two</p>
+                  <p>Content three</p>
+                </ng-container>
+              </nz-modal></p>
+
 
 
 
@@ -32,19 +41,29 @@
             <button nz-button nzType="primary" (click)="Sned()">Sned</button>
 
             <div>
-              <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
-                <nz-avatar nz-comment-avatar nzIcon="user"
-                  nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-                <nz-comment-content>
-                  <p>
-                    We supply a series of design principles, practical patterns and high quality design resources
-                    (Sketch and
-                    Axure), to help people create their product prototypes beautifully and efficiently.
-                  </p>
-                </nz-comment-content>
-            
-            </nz-comment>
-          </div>
+              <div>
+                <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
+                  <nz-avatar nz-comment-avatar nzIcon="user"
+                    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+                  <nz-comment-content>
+                    <p>
+                      Am avut o experienta placuta
+                    </p>
+                  </nz-comment-content>
+                </nz-comment>
+              </div>
+              <div>
+                <nz-comment nzAuthor={{tempClient?.firstName}} [nzDatetime]="time">
+                  <nz-avatar nz-comment-avatar nzIcon="user"
+                    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+                  <nz-comment-content>
+                    <p>
+                      Nu mai vin aici nici o data
+                    </p>
+                  </nz-comment-content>
+                </nz-comment>
+              </div>
+            </div>
           </ng-container>
         </nz-drawer>
       </td>
