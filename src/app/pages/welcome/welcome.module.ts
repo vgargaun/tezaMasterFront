@@ -15,6 +15,9 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+
+
 
 
 @NgModule({
@@ -30,7 +33,8 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     NzTimePickerModule,
     NzInputModule,
     NzCollapseModule,
-    NzUploadModule
+    NzUploadModule,
+    NzTabsModule
 ],
   declarations: [WelcomeComponent],
   exports: [WelcomeComponent]

@@ -47,6 +47,7 @@ export class WelcomeComponent implements OnInit {
     }
   ]
 
+  size: 'large'  = 'large';
 
   visible = false;
   tempClient ?: Client;
@@ -232,6 +233,32 @@ export class WelcomeComponent implements OnInit {
     this.previewImage = file.url || file.response;
     this.previewVisible = true;
   };
+
+  //mass mesage modal
+  isVisibleMassMessage = false;
+
+  showModalMassMessage(): void {
+    this.isVisibleMassMessage = true;
+  }
+
+  handleOkMassMessage(): void {
+    console.log('Button ok clicked!');
+    this.isVisibleMassMessage = false;
+  }
+
+  handleCancelMassMessage(): void {
+    console.log('Button cancel clicked!');
+    this.isVisibleMassMessage = false;
+  }
+
+  // //delete alert
+  // cancel(): void {
+  //   this.nzMessageService.info('click cancel');
+  // }
+
+  // confirm(): void {
+  //   this.nzMessageService.info('click confirm');
+  // }
 
   programare : string = "Reminder"
   ngOnInit() {
