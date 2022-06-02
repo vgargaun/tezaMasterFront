@@ -31,28 +31,68 @@ export class WelcomeComponent implements OnInit {
 
   listOfData: Client[] = [
     {
-      id : "1",
-      firstName : "Veceslav",
-      lastName : "Gargaun",
-      cheatId : "123456",
-      enable : true,
-      userName : "user"
-    },{
-    id : "2",
-    firstName : "Ion",
-    lastName : "Constiu",
-    cheatId : "12345456",
-    enable : true,
-    userName : "user2"
+      id: "1",
+      firstName: "Veceslav",
+      lastName: "Gargaun",
+      cheatId: "123456",
+      enable: true,
+      userName: "user"
+    }, {
+      id: "2",
+      firstName: "Ion",
+      lastName: "Constiu",
+      cheatId: "ion.costiuc",
+      enable: true,
+      userName: "user2"
+    },
+    {
+      id: "3",
+      firstName: "Vasile",
+      lastName: "Constiu",
+      cheatId: "vasile.costiuc",
+      enable: true,
+      userName: "user2"
+    },
+    {
+      id: "4",
+      firstName: "Iulian",
+      lastName: "Suman",
+      cheatId: "iulian.suman",
+      enable: true,
+      userName: "user2"
+    },
+    {
+      id: "5",
+      firstName: "Petru",
+      lastName: "Ivan",
+      cheatId: "12345456",
+      enable: true,
+      userName: "petru.ivan"
+    },
+    {
+      id: "6",
+      firstName: "Igor",
+      lastName: "Dodon",
+      cheatId: "12345456",
+      enable: true,
+      userName: "igor.dodon"
+    },
+    {
+      id: "7",
+      firstName: "Maia",
+      lastName: "Sandu",
+      cheatId: "12345456",
+      enable: true,
+      userName: "maia.sandu"
     }
   ]
 
-  size: 'large'  = 'large';
+  size: 'large' = 'large';
 
   visible = false;
-  tempClient ?: Client;
+  tempClient?: Client;
 
-  open(index : string): void {
+  open(index: string): void {
     console.log(index)
     this.tempClient = this.editCache[index].data
     console.log(this.tempClient)
@@ -74,22 +114,22 @@ export class WelcomeComponent implements OnInit {
     console.log(this.editCache)
   }
 
-  getData(i : string) {
+  getData(i: string) {
     return this.editCache[i].data
   }
 
 
-  Sned(){
-    const test : Test ={
+  Sned() {
+    const test: Test = {
       message: this.message || 'test',
-      cheatId : this.tempClient?.cheatId || ""
-        }
+      cheatId: this.tempClient?.cheatId || ""
+    }
 
     this.http.post('/api/sendMessage', test).subscribe(
-      respons =>{
+      respons => {
         console.log(respons)
         this.message = "";
-      } 
+      }
     )
   }
 
@@ -110,7 +150,7 @@ export class WelcomeComponent implements OnInit {
   switchValue = false;
 
 
-//modal
+  //modal
   isVisible = false;
 
   showModal(): void {
@@ -220,8 +260,8 @@ export class WelcomeComponent implements OnInit {
 
   //photo
   fileList: NzUploadFile[] = [
-    
-     
+
+
   ];
   previewImage: string | undefined = '';
   previewVisible = false;
@@ -251,21 +291,12 @@ export class WelcomeComponent implements OnInit {
     this.isVisibleMassMessage = false;
   }
 
-  // //delete alert
-  // cancel(): void {
-  //   this.nzMessageService.info('click cancel');
-  // }
-
-  // confirm(): void {
-  //   this.nzMessageService.info('click confirm');
-  // }
-
-  programare : string = "Reminder"
+  programare: string = "Reminder"
   ngOnInit() {
     // this.http.get<Client[]>("/api/getClientList")
     // .subscribe(respons=>{
     //   this.listOfData = respons
-     this.updateEditCache();
+    this.updateEditCache();
     //   console.log(respons)
     // })
 
