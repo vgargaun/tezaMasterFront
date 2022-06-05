@@ -2,9 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Client } from "../../models/client";
-import { Test } from "../../models/test";
+import { ClientMessageSender } from "../../models/clientMessageSender";
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { formatDistance } from 'date-fns';
+import { ClientReminder } from 'src/app/models/clientReminder';
+import { ClientFeedback } from 'src/app/models/clientFeedback';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
@@ -27,76 +29,113 @@ export class WelcomeComponent implements OnInit {
   message?: string
   editCache: { [key: string]: { edit: boolean; data: Client } } = {};
 
-  // listOfData: Client[] = []
+  listClientFeeedback : ClientFeedback[] = []
+  listOfData: Client[] = []
+  listClientReminder: ClientReminder[] = [];
 
-  listOfData: Client[] = [
-    {
-      id: "1",
-      firstName: "Veceslav",
-      lastName: "Gargaun",
-      cheatId: "123456",
-      enable: true,
-      userName: "user"
-    }, {
-      id: "2",
-      firstName: "Ion",
-      lastName: "Constiu",
-      cheatId: "ion.costiuc",
-      enable: true,
-      userName: "user2"
-    },
-    {
-      id: "3",
-      firstName: "Vasile",
-      lastName: "Constiu",
-      cheatId: "vasile.costiuc",
-      enable: true,
-      userName: "user2"
-    },
-    {
-      id: "4",
-      firstName: "Iulian",
-      lastName: "Suman",
-      cheatId: "iulian.suman",
-      enable: true,
-      userName: "user2"
-    },
-    {
-      id: "5",
-      firstName: "Petru",
-      lastName: "Ivan",
-      cheatId: "12345456",
-      enable: true,
-      userName: "petru.ivan"
-    },
-    {
-      id: "6",
-      firstName: "Igor",
-      lastName: "Dodon",
-      cheatId: "12345456",
-      enable: true,
-      userName: "igor.dodon"
-    },
-    {
-      id: "7",
-      firstName: "Maia",
-      lastName: "Sandu",
-      cheatId: "12345456",
-      enable: true,
-      userName: "maia.sandu"
-    }
-  ]
+  // listOfData: Client[] = [
+  //   {
+  //     id: "1",
+  //     firstName: "Veceslav",
+  //     lastName: "Gargaun",
+  //     cheatId: "123456",
+  //     enable: false,
+  //     userName: "veceslav.gargaun"
+  //   }, {
+  //     id: "2",
+  //     firstName: "Ion",
+  //     lastName: "Constiu",
+  //     cheatId: "ion.costiuc",
+  //     enable: true,
+  //     userName: "ion.costiuc"
+  //   },
+  //   {
+  //     id: "3",
+  //     firstName: "Vasile",
+  //     lastName: "Constiu",
+  //     cheatId: "vasile.costiuc",
+  //     enable: true,
+  //     userName: "vasile.costiuc"
+  //   },
+  //   {
+  //     id: "4",
+  //     firstName: "Iulian",
+  //     lastName: "Suman",
+  //     cheatId: "iulian.suman",
+  //     enable: true,
+  //     userName: "iulian.suman"
+  //   },
+  //   {
+  //     id: "5",
+  //     firstName: "Petru",
+  //     lastName: "Ivan",
+  //     cheatId: "12345456",
+  //     enable: true,
+  //     userName: "petru.ivan"
+  //   },
+  //   {
+  //     id: "6",
+  //     firstName: "Igor",
+  //     lastName: "Dodon",
+  //     cheatId: "12345456",
+  //     enable: true,
+  //     userName: "igor.dodon"
+  //   },
+  //   {
+  //     id: "7",
+  //     firstName: "Maia",
+  //     lastName: "Sandu",
+  //     cheatId: "12345456",
+  //     enable: true,
+  //     userName: "maia.sandu"
+  //   }
+  // ]
 
   size: 'large' = 'large';
 
   visible = false;
   tempClient?: Client;
+  switchValue = this.tempClient?.enable;
 
   open(index: string): void {
-    console.log(index)
     this.tempClient = this.editCache[index].data
-    console.log(this.tempClient)
     this.visible = true;
+    this.imgBase64Path = "";
+    this.switchValue = this.tempClient?.enable;
+
+    //reminder
+    this.reminderName = "";
+    this.reminderMessage =""
+    this.date = new Date(0, 0, 0, 0, 0, 0);
+    this.time = "";
+
+    this.http.get<ClientReminder[]>("/api/getClientReminderList?clientId="+this.tempClient.id).subscribe(
+      response=>{
+        this.listClientReminder = response;
+        console.log(this.listClientReminder)
+      }
+    )
+
+    this.http.get<ClientFeedback[]>("/api/getClientFeedBackList?clientId="+this.tempClient.id).subscribe(
+      response=>{
+        this.listClientFeeedback = response;
+        console.log("feedback",this.listClientFeeedback)
+      }
+    )
+
+  }
+
+  deleteReminder(clientReminder ?: ClientReminder){
+    this.http.post("/api/deleteClientReminder", clientReminder).subscribe(
+      response=>{
+        this.http.get<ClientReminder[]>("/api/getClientReminderList?clientId="+clientReminder?.clientId).subscribe(
+          response=>{
+            this.listClientReminder = response;
+            console.log(this.listClientReminder)
+          }
+        )
+      }
+    )
   }
 
   close(): void {
@@ -120,15 +159,19 @@ export class WelcomeComponent implements OnInit {
 
 
   Sned() {
-    const test: Test = {
+    const clientMessageSender: ClientMessageSender = {
       message: this.message || 'test',
-      cheatId: this.tempClient?.cheatId || ""
+      cheatId: this.tempClient?.cheatId || "",
+      photo : this.imgBase64Path
     }
 
-    this.http.post('/api/sendMessage', test).subscribe(
+    this.http.post('/api/sendMessage', clientMessageSender).subscribe(
       respons => {
         console.log(respons)
         this.message = "";
+        this.imgBase64Path="";
+        this.cardImageBase64 = "";
+        this.isImageSaved = false;
       }
     )
   }
@@ -147,19 +190,48 @@ export class WelcomeComponent implements OnInit {
     this.dislikes = 1;
   }
 
-  switchValue = false;
-
 
   //modal
+
+  clientReminder?: ClientReminder;
   isVisible = false;
 
   showModal(): void {
     this.isVisible = true;
   }
 
+  reminderName : string = "";
+  reminderMessage : string = "";
   handleOk(): void {
     console.log('Button ok clicked!');
     this.isVisible = false;
+    console.log(this.time);
+
+    this.clientReminder = {
+      clientId : this.tempClient?.id,
+      reminderName : this.reminderName,
+      message : this.reminderMessage,
+      date : this.date,
+      hour : this.time
+    }
+    console.log(this.clientReminder)
+
+    this.http.post('/api/addClientReminder', this.clientReminder).subscribe(
+      respons => {
+        console.log(respons)
+
+        this.http.get<ClientReminder[]>("/api/getClientReminderList?clientId="+this.tempClient?.id).subscribe(
+          response=>{
+            this.listClientReminder = response;
+            console.log(this.listClientReminder)
+          }
+        )
+      }
+    )
+
+
+
+
   }
 
   handleCancel(): void {
@@ -167,23 +239,27 @@ export class WelcomeComponent implements OnInit {
     this.isVisible = false;
   }
 
-
+date?: Date;
   //calendar
   onValueChange(value: Date): void {
-    console.log(`Current value: ${value}`);
+    console.log(`Current value1: ${value}`);
+    this.date = value;
   }
 
+
+
   onPanelChange(change: { date: Date; mode: string }): void {
-    console.log(`Current value: ${change.date}`);
-    console.log(`Current mode: ${change.mode}`);
+    console.log(`Current value2: ${change.date}`);
+    console.log(`Current mode3: ${change.mode}`);
   }
 
   //ceas
   clock: Date | null = null;
   defaultOpenValue = new Date(0, 0, 0, 0, 0, 0);
 
-  //titlu
-  value?: string;
+  onValueTime(){
+    console.log(this.time);
+  }
 
   //selector tabela
   listOfSelection = [
@@ -259,20 +335,25 @@ export class WelcomeComponent implements OnInit {
   ];
 
   //photo
-  fileList: NzUploadFile[] = [
-
-
-  ];
-  previewImage: string | undefined = '';
-  previewVisible = false;
-
-  handlePreview = async (file: NzUploadFile): Promise<void> => {
-    if (!file.url && !file.response) {
-      file.response = await getBase64(file.originFileObj!);
-    }
-    this.previewImage = file.url || file.response;
-    this.previewVisible = true;
-  };
+  isImageSaved: boolean = false;
+  cardImageBase64: string = '';
+  imgBase64Path : string = '';
+  CreateBase64String(fileInput: any) {
+    if (fileInput.target.files && fileInput.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const image = new Image();
+        image.src = e.target.result;
+        image.onload = rs => {
+          const imgBase64Path = e.target.result;
+          this.cardImageBase64 = imgBase64Path;         
+          this.isImageSaved = true;
+          this.imgBase64Path = imgBase64Path;
+          console.log(imgBase64Path);
+        };
+      };
+      reader.readAsDataURL(fileInput.target.files[0]);
+    }}
 
   //mass mesage modal
   isVisibleMassMessage = false;
@@ -282,8 +363,25 @@ export class WelcomeComponent implements OnInit {
   }
 
   handleOkMassMessage(): void {
-    console.log('Button ok clicked!');
     this.isVisibleMassMessage = false;
+
+    const clientMessageSender: ClientMessageSender = {
+      message: this.message || 'test',
+      cheatId: this.tempClient?.cheatId || "",
+      photo : this.imgBase64Path
+    }
+
+    console.log("sender",clientMessageSender)
+
+    this.http.post('/api/sendMassMessage', clientMessageSender).subscribe(
+      respons => {
+        console.log(respons)
+        this.message = "";
+        this.imgBase64Path="";
+        this.cardImageBase64 = "";
+        this.isImageSaved = false;
+      }
+    )
   }
 
   handleCancelMassMessage(): void {
@@ -291,14 +389,42 @@ export class WelcomeComponent implements OnInit {
     this.isVisibleMassMessage = false;
   }
 
+  //DeleteClient
+
+  deleteClient(tempClient : Client):void {
+    console.log(tempClient)
+    this.http.post('/api/deleteClient', tempClient).subscribe(
+      respons => {
+        console.log(respons)
+        this.message = "";
+      }
+    )
+  }
+  //Swich
+
+  clickSwitch(){
+    this.listOfData.forEach(
+      client=>{
+
+        if(client.id==this.tempClient?.id){
+console.log(this.switchValue)
+this.switchValue = true;
+
+console.log(this.switchValue)
+
+        }
+      }
+    )
+  }
+
   programare: string = "Reminder"
   ngOnInit() {
-    // this.http.get<Client[]>("/api/getClientList")
-    // .subscribe(respons=>{
-    //   this.listOfData = respons
+    this.http.get<Client[]>("/api/getClientList")
+    .subscribe(respons=>{
+      this.listOfData = respons
     this.updateEditCache();
-    //   console.log(respons)
-    // })
+      console.log(respons)
+    })
 
   }
 
